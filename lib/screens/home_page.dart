@@ -56,12 +56,12 @@ class _HomePageState extends State<HomePage> {
                Container(
                 width: 450,
                 height: 450,
-                child: Image(image: AssetImage("assets/images/kamera_goruntusu.jpg",),fit: BoxFit.fill,),
+                child: Image(image: AssetImage("assets/images/kamera_goruntusu.jpg"),fit: BoxFit.fill,),
               ),
               Container(
                 width: 450,
                 height: 450,
-                color: Colors.grey,
+                child: Image(image: AssetImage("assets/images/uydu.png"),fit: BoxFit.fill,),
               ),
              ],
             ),
