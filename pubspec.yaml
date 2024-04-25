@@ -38,6 +38,7 @@ dependencies:
   fl_chart: ^0.67.0
   camera: ^0.10.5+9
   http: ^1.2.1
+  provider: ^6.1.2
 
 dev_dependencies:
   flutter_test:

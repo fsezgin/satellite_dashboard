@@ -1,50 +1,59 @@
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
 
 
-final url = Uri.parse("http://127.0.0.1:5000/satellite-data");
+class TableProvider extends ChangeNotifier {
+  final url = Uri.parse("http://127.0.0.1:5000/satellite-data");
+  List<Satellite> satellite = [];
 
-Future fetchSatellite() async {
+ TableProvider() {
+  print("içerideyiz1");
+    fetchSatellite(); // Call fetchSatellite() in the constructor
+  }
+
+Future<void> fetchSatellite() async {
   try{
     final response = await http.get(url);
+
+    final List<dynamic> res = jsonDecode(response.body) as List<dynamic>;
+    
     if(response.statusCode == 200) {
-      var result = satelliteFromJson(response.body);
-      return result;
+      satellite = res.map((e) => Satellite.fromJson(e as Map<String, dynamic>)).toList();
+      notifyListeners();
+      print(satellite);
     }else{
       print(response.statusCode);
     }
   }catch(e){
     print(e.toString());
+    }
   }
 }
 
-List<Satellite> satelliteFromJson(String str) => List<Satellite>.from(json.decode(str).map((x) => Satellite.fromJson(x)));
-
-String satelliteToJson(List<Satellite> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
-
 class Satellite {
-    var basinc1;
-    var basinc2;
-    var gps1Altitude;
-    var gps1Latitude;
-    var gps1Longitude;
-    String gondermeSaati;
-    String hataKodu;
-    var ioTData;
-    var paketNumarasi;
-    var pitch;
-    double pilGerilimi;
-    String rhrh;
-    var roll;
-    var sicaklik;
-    var takimNo;
-    var uyduStatusu;
-    var yaw;
-    var yukseklik1;
-    var yukseklik2;
-    var inisHizi;
-    var irtifaFarki;
+   final num basinc1,
+     basinc2,
+     gps1Altitude,
+     gps1Latitude,
+     gps1Longitude,
+     ioTData,
+     paketNumarasi,
+     pitch,
+     pilGerilimi,
+     roll,
+     sicaklik,
+     takimNo,
+     uyduStatusu,
+     yaw,
+     yukseklik1,
+     yukseklik2,
+     inisHizi,
+     irtifaFarki;
+    String gondermeSaati,
+     hataKodu,
+     rhrh;
 
     Satellite({
         required this.basinc1,
@@ -70,8 +79,8 @@ class Satellite {
         required this.irtifaFarki,
     });
 
-    factory Satellite.fromJson(Map<String, dynamic> json) => Satellite(
-        basinc1: json["BASINÇ1"],
+     factory Satellite.fromJson(Map<String, dynamic> json) {
+      return Satellite(basinc1: json["BASINÇ1"],
         basinc2: json["BASINÇ2"],
         gps1Altitude: json["GPS1 ALTITUDE"]?.toDouble(),
         gps1Latitude: json["GPS1 LATITUDE"]?.toDouble(),
@@ -91,30 +100,6 @@ class Satellite {
         yukseklik1: json["YÜKSEKLİK1"],
         yukseklik2: json["YÜKSEKLİK2"],
         inisHizi: json["İNİŞ HIZI"],
-        irtifaFarki: json["İRTİFA FARKI"],
-    );
-
-    Map<String, dynamic> toJson() => {
-        "BASINÇ1": basinc1,
-        "BASINÇ2": basinc2,
-        "GPS1 ALTITUDE": gps1Altitude,
-        "GPS1 LATITUDE": gps1Latitude,
-        "GPS1 LONGITUDE": gps1Longitude,
-        "GÖNDERME SAATİ": gondermeSaati,
-        "HATA KODU": hataKodu,
-        "IoT DATA": ioTData,
-        "PAKET NUMARASI": paketNumarasi,
-        "PITCH": pitch,
-        "PİL GERİLİMİ": pilGerilimi,
-        "RHRH": rhrh,
-        "ROLL": roll,
-        "SICAKLIK": sicaklik,
-        "TAKIM NO": takimNo,
-        "UYDU STATÜSÜ": uyduStatusu,
-        "YAW": yaw,
-        "YÜKSEKLİK1": yukseklik1,
-        "YÜKSEKLİK2": yukseklik2,
-        "İNİŞ HIZI": inisHizi,
-        "İRTİFA FARKI": irtifaFarki,
-    };
+        irtifaFarki: json["İRTİFA FARKI"],);
+  }
 }
